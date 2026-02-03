@@ -1,0 +1,28 @@
+  /**
+ * Global Styles
+ * 
+ * This file includes Tailwind CSS directives and any global styles.
+ * 
+ * Tailwind directives:
+ * - @tailwind base: Base styles (CSS reset, basic element styles)
+ * - @tailwind components: Component classes
+ * - @tailwind utilities: Utility classes
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/**
+ * Custom scrollbar styles for better UX
+ * Optional: Makes scrollbars look better in webkit browsers
+ */
+@layer base {
+  * {
+    @apply scroll-smooth;
+  }
+  
+  body {
+    @apply bg-gray-50;
+  }
+}
