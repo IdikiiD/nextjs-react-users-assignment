@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { User } from '@/types/user';
+import {useState, useEffect} from 'react';
+import {User} from '@/types/user';
 
-interface UseUsersReturn{
+interface UseUsersReturn {
     users: User[];
     loading: boolean;
     error: string | null;
@@ -59,10 +59,10 @@ export function useUsers(): UseUsersReturn {
     const updateUser = (id: number, updates: Partial<User>) => {
         setUsers((prevUsers) =>
             prevUsers.map((user) =>
-                user.id === id ? { ...user, ...updates } : user
+                user.id === id ? {...user, ...updates} : user
             )
         );
     };
 
-    return { users, loading, error, updateUser };
+    return {users, loading, error, updateUser};
 }
