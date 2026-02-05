@@ -1,3 +1,27 @@
+/**
+ * UserList Component
+ *
+ * Component responsible for rendering the list of users.
+ *
+ * Responsibilities:
+ * - Render list of UserCard components
+ * - Show loading state
+ * - Show error state
+ * - Show empty state (no users found)
+ * - Handle edit action for each user
+ *
+ * Design decisions:
+ * - Uses stable keys (user.id) for list items - critical for React performance
+ * - Separates concerns - this component handles rendering, not filtering
+ * - Provides good UX with loading, error, and empty states
+ *
+ * Props:
+ * - users: Array of users to display
+ * - loading: Loading state
+ * - error: Error message if fetch failed
+ * - onEditUser: Callback when edit is clicked
+ */
+
 'use client';
 
 import React from 'react';
@@ -12,6 +36,13 @@ interface UserListProps {
 }
 
 export function UserList({users, loading, error, onEditUser}: UserListProps) {
+    /**
+     * Loading State
+     *
+     * Shows while data is being fetched.
+     * In a production app, you might want a skeleton loader
+     * for better perceived performance.
+     */
     if (loading) {
         return (
             <div className="flex items-center justify-center py-12">
@@ -22,6 +53,12 @@ export function UserList({users, loading, error, onEditUser}: UserListProps) {
             </div>
         );
     }
+    /**
+     * Error State
+     *
+     * Shows if the fetch request failed.
+     * Provides clear feedback to the user about what went wrong.
+     */
     if (error) {
         return (
             <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
@@ -30,6 +67,12 @@ export function UserList({users, loading, error, onEditUser}: UserListProps) {
             </div>
         );
     }
+    /**
+     * Empty State
+     *
+     * Shows when no users match the current filters.
+     * Helps user understand why they're seeing no results.
+     */
     if (users.length === 0) {
         return (
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-12 text-center">
@@ -38,6 +81,23 @@ export function UserList({users, loading, error, onEditUser}: UserListProps) {
             </div>
         );
     }
+    /**
+     * Users Grid
+     *
+     * Renders users in a responsive grid layout:
+     * - 1 column on mobile
+     * - 2 columns on medium screens
+     * - 3 columns on large screens
+     *
+     * IMPORTANT: We use user.id as the key, not array index.
+     * This is critical for:
+     * 1. React's reconciliation algorithm
+     * 2. Preventing unnecessary re-renders
+     * 3. Maintaining component state correctly
+     *
+     * Never use array index as key when items can be reordered,
+     * filtered, or removed!
+     */
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
