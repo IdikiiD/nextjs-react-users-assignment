@@ -1,3 +1,23 @@
+/**
+ * UserCard Component
+ *
+ * Presentational component that displays a single user's information.
+ *
+ * Responsibilities:
+ * - Display user data (name, email, city)
+ * - Provide edit action button
+ * - Visual presentation only, no business logic
+ *
+ * Design decisions:
+ * - Uses React.memo for performance - only re-renders if props change
+ * - Receives callback for edit action (separation of concerns)
+ * - Simple, focused component with single responsibility
+ *
+ * Props:
+ * - user: User data to display
+ * - onEdit: Callback function when edit button is clicked
+ */
+
 'use client';
 
 import React from 'react';
@@ -7,6 +27,17 @@ interface UserCardProps {
     user: User;
     onEdit: () => void;
 }
+
+/**
+ * Using React.memo to prevent unnecessary re-renders.
+ *
+ * This component will only re-render if:
+ * 1. The user prop changes (by reference)
+ * 2. The onEdit function reference changes
+ *
+ * For better optimization, consider using useCallback for onEdit
+ * in the parent component.
+ */
 
 export const UserCard = React.memo<UserCardProps>(({user, onEdit}) => {
         return (
