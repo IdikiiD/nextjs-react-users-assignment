@@ -1,10 +1,39 @@
+/**
+ * Validation Utilities
+ *
+ * Pure functions for form validation.
+ * Keeping validation separate from components makes it:
+ * 1. Reusable across different forms
+ * 2. Easy to test
+ * 3. Easy to maintain and update rules
+ */
 import {FormErrors, EditableUser} from '@/types/user';
 
+/**
+ * Validates email format using a regex pattern
+ *
+ * This is a simple email validation. In production, you might want:
+ * - More sophisticated regex
+ * - Server-side validation
+ * - Email verification
+ */
 export function isValidEmail(email: string): boolean {
     // Basic email regex - checks for format: anything@anything.anything
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
 }
+/**
+ * Validates all form fields and returns errors
+ *
+ * This function contains all validation logic in one place.
+ * Returns an object with error messages for invalid fields.
+ *
+ * Validation rules:
+ * - Name: required, minimum 2 characters
+ * - Email: required, valid format
+ * - City: required, minimum 2 characters
+ *
+ */
 
 export function validateUserForm(formData: EditableUser): FormErrors {
     const errors: FormErrors = {};
