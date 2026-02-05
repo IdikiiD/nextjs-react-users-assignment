@@ -1,3 +1,27 @@
+/**
+ * EditUserForm Component
+ *
+ * Form component for editing user information.
+ *
+ * Responsibilities:
+ * - Render controlled form inputs
+ * - Handle form state
+ * - Validate input data
+ * - Display validation errors
+ * - Submit form data
+ *
+ * Design decisions:
+ * - Controlled inputs (React manages input state)
+ * - Real-time validation on blur for better UX
+ * - Submit validation to prevent invalid data
+ * - Clear separation between form logic and validation logic
+ *
+ * Props:
+ * - user: User being edited (for initial values)
+ * - onSave: Callback with updated data
+ * - onCancel: Callback to close form
+ */
+
 'use client';
 
 import React, {useState} from 'react';
@@ -11,13 +35,35 @@ interface EditUserFormProps {
 }
 
 export function EditUserForm({user, onSave, onCancel}: EditUserFormProps) {
+    /**
+     * Form state - contains current values of form fields
+     *
+     * We initialize with user data and flatten the city field
+     * from user.address.city for easier form handling.
+     */
     const [formData, setFormData] = useState<EditableUser>({
         name: user.name,
         email: user.email,
         city: user.address.city,
     });
+    /**
+     * Validation errors state
+     *
+     * Stores error messages for each field.
+     * Empty object means no errors.
+     */
 
     const [errors, setErrors] = useState<FormErrors>({});
+    /**
+     * Handles input changes for all form fields
+     *
+     * Using a single handler for all inputs:
+     * - Reduces code duplication
+     * - Easier to maintain
+     * - Follows DRY principle
+     *
+     * The input name must match the formData property name.
+     */
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const {name, value} = e.target;
@@ -27,6 +73,10 @@ export function EditUserForm({user, onSave, onCancel}: EditUserFormProps) {
             [name]: value,
         }));
 
+        /**
+         * Clear error for this field when user starts typing
+         * Provides immediate feedback that they're fixing the issue
+         */
         if (errors[name as keyof FormErrors]) {
             setErrors(prev => ({
                 ...prev,
@@ -34,6 +84,14 @@ export function EditUserForm({user, onSave, onCancel}: EditUserFormProps) {
             }));
         }
     };
+    /**
+     * Handles blur event - validates field when user leaves it
+     *
+     * We validate on blur instead of on every keystroke:
+     * - Better UX - doesn't show errors while user is typing
+     * - Better performance - fewer validation calls
+     * - Less distracting for the user
+     */
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
         const {name} = e.target;
 
@@ -48,6 +106,18 @@ export function EditUserForm({user, onSave, onCancel}: EditUserFormProps) {
             }));
         }
     };
+    /**
+     * Handles form submission
+     *
+     * Flow:
+     * 1. Prevent default form submission
+     * 2. Validate all fields
+     * 3. If errors exist, show them and stop
+     * 4. If valid, prepare updates and call onSave
+     *
+     * We convert the flat formData back to the nested User structure
+     * that matches the User type.
+     */
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -60,7 +130,12 @@ export function EditUserForm({user, onSave, onCancel}: EditUserFormProps) {
             return;
         }
 
-
+        /**
+         * Prepare updates in the format expected by the parent
+         *
+         * We need to restructure the flat formData back into
+         * the nested User structure, specifically for address.city
+         */
         const updates: Partial<User> = {
             name: formData.name.trim(),
             email: formData.email.trim(),
